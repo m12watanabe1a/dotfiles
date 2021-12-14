@@ -7,14 +7,7 @@ helpmsg() {
 }
 
 link_to_homedir() {
-  command echo "backup old dotfiles..."
-  local backup_dir="$HOME/.cache"
   local install_dir="$HOME/.config"
-  if [ ! -d "$backup_dir/.dotbackup" ];then
-    command echo "$backup_dir/.dotbackup not found. Auto Make it"
-    command mkdir -p "$backup_dir/.dotbackup"
-  fi
-
   local dotdir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
   if [[ "$HOME" != "$dotdir" ]];then
     local dirs=`find $dotdir/* -maxdepth 0 -type d`
@@ -24,7 +17,6 @@ link_to_homedir() {
       [[ `basename $d` == ".github" ]] && continue
       local installed_d=$install_dir/`basename $d`
       if [[ -L $installed_d ]];then
-        command cp -rL "$installed_d" "$backup_dir/dotbackup"
         command rm -rf "$installed_d"
       fi
       command ln -snf $d $install_dir
