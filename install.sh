@@ -24,7 +24,6 @@ link_to_homedir() {
       [[ `basename $d` == ".github" ]] && continue
       local installed_d=$install_dir/`basename $d`
       if [[ -L $installed_d ]];then
-        echo "take backup"
         command cp -rL "$installed_d" "$backup_dir/dotbackup"
         command rm -rf "$installed_d"
       fi
