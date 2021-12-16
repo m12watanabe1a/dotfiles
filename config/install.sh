@@ -109,3 +109,4 @@ link_to_homedir
 update_shell
 
 command echo -e "\e[1;36m Install completed 🍺\e[m"
+

@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
 this_file=$BASH_SOURCE
+dist_dir=`dirname $this_file`
 
 
-if [ -d ~/.config/bashrc.d ]; then
-  for rc in ~/.config/bashrc.d/*.bash; do
+if [ -d $dist_dir ]; then
+  for rc in $dist_dir/*.bash; do
     [[ $rc == $this_file ]] && continue
     if [ -f "$rc" ]; then
       . "$rc"
