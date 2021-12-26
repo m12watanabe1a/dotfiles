@@ -4,7 +4,7 @@ bin_dir = $(HOME)/.local/bin
 
 install: tmux nvim fzf
 
-config: 
+config:
 	./config/install.sh
 
 tmux:
