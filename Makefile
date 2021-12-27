@@ -7,13 +7,20 @@ install: tmux nvim fzf
 config:
 	./config/install.sh
 
-tmux:
-	./install/tmux/install.sh
-	mv ./install/tmux/temp/tmux $(bin_dir)
 
-nvim:
-	./install/nvim/install.sh
-	mv ./install/nvim/temp/nvim $(bin_dir)
+tmux_dir = ./install/tmux
+$(tmux_dir)/temp/tmux:
+	$(tmux_dir)/install.sh
+
+tmux: $(tmux_dir)/temp/tmux
+	cp $(tmux_dir)/temp/tmux $(bin_dir)/tmux
+
+nvim_dir = ./install/nvim
+$(nvim_dir)/temp/nvim:
+	$(nvim_dir)/install.sh
+
+nvim: $(nvim_dir)/temp/nvim
+	cp $(nvim_dir)/temp/nvim $(bin_dir)/nvim
 
 vimplug:
 	./install/vimplug/install.sh
