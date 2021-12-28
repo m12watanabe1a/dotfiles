@@ -38,6 +38,7 @@ function rcd() {
 }
 
 
+# Delete local branch which does not exist on remote repositiory
 function gprune() {
   git fetch -p && \
     for branch in $(git branch -vv | grep ': gone]' | awk '{print $1}'); do\
