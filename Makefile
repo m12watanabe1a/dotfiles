@@ -1,30 +1,51 @@
-.PHONY: config
+.PHONY: config deploy vimplug fzf ubuntu-setup
 
-bin_dir = $(HOME)/.local/bin
+ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+BIN_DIR = $(ROOT_DIR)/bin
+
+TMUX_DIR = ./install/tmux
+NVIM_DIR = ./install/nvim
+GITHUB_CLI_DIR = ./install/gh-cli
+
+all: config install deploy
+
+deploy: tmux nvim github-cli
+	mkdir -p $(BIN_DIR)
+	cp $(TMUX_DIR)/temp/tmux $(BIN_DIR)/tmux
+	cp $(NVIM_DIR)/temp/nvim $(BIN_DIR)/nvim
+	cp $(GITHUB_CLI_DIR)/temp/build/gh $(BIN_DIR)/gh
+	$(BIN_DIR)/gh auth login
 
 install: tmux nvim fzf vimplug
 
 config:
 	./config/install.sh
 
+tmux:
+	$(TMUX_DIR)/install.sh
 
-tmux_dir = ./install/tmux
-$(tmux_dir)/temp/tmux:
-	$(tmux_dir)/install.sh
+nvim:
+	$(NVIM_DIR)/install.sh
 
-tmux: $(tmux_dir)/temp/tmux
-	cp $(tmux_dir)/temp/tmux $(bin_dir)/tmux
-
-nvim_dir = ./install/nvim
-$(nvim_dir)/temp/nvim:
-	$(nvim_dir)/install.sh
-
-nvim: $(nvim_dir)/temp/nvim
-	cp $(nvim_dir)/temp/nvim $(bin_dir)/nvim
+github-cli:
+	$(GITHUB_CLI_DIR)/install.sh
 
 vimplug:
 	./install/vimplug/install.sh
 
 fzf:
 	./install/fzf/install.sh
+
+ubuntu-setup:
+	sudo apt install -y xsel
+
+ubuntu-ssh-server: ubuntu-setup
+	sudo apt install -y openssh-server x11vnc xvfb lightdm jq
+	$(shell sudo sed -i 's/#Port 22/Port 52000/g' /etc/ssh/sshd_config)
+	sudo service ssh restart
+	sudo x11vnc -storepasswd /etc/.vncpasswd
+	sudo cp system/x11vnc.service /etc/systemd/system/x11vnc.service
+	sudo systemctl enable x11vnc.service
+	sudo systemctl start x11vnc.service
+	./config/register_sshkey.sh
 

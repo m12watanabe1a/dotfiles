@@ -37,7 +37,6 @@ function rcd() {
   cd "$root"
 }
 
-
 # Delete local branch which does not exist on remote repositiory
 function gprune() {
   git fetch -p && \
@@ -45,3 +44,4 @@ function gprune() {
       git branch -D $branch; \
     done
 }
+
